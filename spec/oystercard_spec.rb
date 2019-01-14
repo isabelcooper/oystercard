@@ -2,6 +2,8 @@ require 'oystercard'
 
 describe Oystercard do
 
+  let(:station) { double :station }
+
   it "has a 0 balance when a new card is initialized" do
     expect(subject.balance).to eq 0
   end
@@ -16,7 +18,7 @@ describe Oystercard do
   end
 
   it "will raise and error if the user tried to touch in with insufficient funds on the card" do
-    expect{ subject.touch_in }.to raise_error "Can\'t start journey: insufficient funds"
+    expect{ subject.touch_in(station) }.to raise_error "Can\'t start journey: insufficient funds"
   end
 
   it "will raise an error if user tries to touch out without touching in first" do
@@ -24,28 +26,30 @@ describe Oystercard do
     expect{ subject.touch_out(2)}.to raise_error "Can\'t touch out without touching in first"
   end
 
+  it "will raise an error if user tries to touch in and the card is already in use" do
+    subject.top_up(10)
+    subject.touch_in(station)
+    expect{ subject.touch_in(station) }.to raise_error "Can\'t touch in: card already in use"
+  end
+
   it "should deduct a fare from the card balance when the touch_out method is called" do
     subject.top_up(10)
-    subject.touch_in
+    subject.touch_in(station)
     subject.touch_out(2)
     expect(subject.balance).to eq 8
   end
 
-  it "will have an in_journey? status of false when a card is initialized" do
-    expect(subject.in_journey?).to eq false
-  end
-
-  it "will change the status of @in_journey to true when the touch_in method is called" do
-    subject.top_up(2)
-    subject.touch_in
-    expect(subject.in_journey?).to eq true
-  end
-
-  it "will change the status of @in_journey to false when the touch_out method is called" do
+  it "will remember the entry station after touch in" do
     subject.top_up(10)
-    subject.touch_in
+    subject.touch_in(station)
+    expect(subject.entry_station).to eq station
+  end
+
+  it "will reset the entry station to nil after touching out" do
+    subject.top_up(10)
+    subject.touch_in(station)
     subject.touch_out(2)
-    expect(subject.in_journey?).to eq false
+    expect(subject.entry_station).to eq nil
   end
 
 end
