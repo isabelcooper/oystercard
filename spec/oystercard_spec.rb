@@ -15,9 +15,19 @@ describe Oystercard do
     expect{ subject.top_up(subject.limit + 1) }.to raise_error "This exceeds the £#{subject.limit} limit"
   end
 
-  it "should deduct a fare from the card balance when the deduct menthod is called" do
+  it "will raise and error if the user tried to touch in with insufficient funds on the card" do
+    expect{ subject.touch_in }.to raise_error "Can\'t start journey: insufficient funds"
+  end
+
+  it "will raise an error if user tries to touch out without touching in first" do
     subject.top_up(10)
-    subject.deduct(2)
+    expect{ subject.touch_out(2)}.to raise_error "Can\'t touch out without touching in first"
+  end
+
+  it "should deduct a fare from the card balance when the touch_out method is called" do
+    subject.top_up(10)
+    subject.touch_in
+    subject.touch_out(2)
     expect(subject.balance).to eq 8
   end
 
@@ -26,12 +36,15 @@ describe Oystercard do
   end
 
   it "will change the status of @in_journey to true when the touch_in method is called" do
+    subject.top_up(2)
     subject.touch_in
     expect(subject.in_journey?).to eq true
   end
 
   it "will change the status of @in_journey to false when the touch_out method is called" do
-    subject.touch_out
+    subject.top_up(10)
+    subject.touch_in
+    subject.touch_out(2)
     expect(subject.in_journey?).to eq false
   end
 
