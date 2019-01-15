@@ -35,6 +35,10 @@ describe Journey do
       expect(subject.fare).to eq Journey::MINIMUM_FARE
     end
 
+    it 'should calculate a penalty fare by default' do
+      expect(subject.fare).to eq Journey::PENALTY_FARE
+    end
+
     it 'should calculate a penalty fare if the user doesn\'t touch in' do
       subject.update_exit_station(station)
       expect(subject.fare).to eq Journey::PENALTY_FARE

@@ -19,20 +19,25 @@ class Oystercard
   end
 
   def touch_in(station)
-    fail "Can\'t touch in: card already in use" if @single_journey.entry_station != nil
+    close_journey if @single_journey.incomplete
+#    fail "Can\'t touch in: card already in use" if @single_journey.entry_station != nil
     sufficient_funds?
     @single_journey.update_entry_station(station)
   end
 
-  def touch_out(fare, station)
-    fail "Can\'t touch out without touching in first" if  @single_journey.entry_station == nil
-    deduct(fare)
+  def touch_out(station)
+#    fail "Can\'t touch out without touching in first" if  @single_journey.entry_station == nil
     @single_journey.update_exit_station(station)
-    @journeys << @single_journey
-    reset_journey
+    close_journey
   end
 
   private
+
+  def close_journey
+    deduct(@single_journey.fare)
+    @journeys << @single_journey
+    reset_journey
+  end
 
   def deduct(fare)
     @balance -= fare

@@ -19,7 +19,15 @@ class Journey
   end
 
   def fare
-    entry_station != nil && exit_station != nil ? MINIMUM_FARE : PENALTY_FARE
+    complete ? MINIMUM_FARE : PENALTY_FARE
+  end
+
+  def complete
+    entry_station != nil && exit_station != nil
+  end
+
+  def incomplete
+   ( entry_station == nil || exit_station == nil ) && ( entry_station != exit_station )
   end
 
 end
