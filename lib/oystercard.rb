@@ -2,15 +2,15 @@ require_relative 'journey'
 
 class Oystercard
 
-  attr_reader :balance, :entry_station, :journeys
+  attr_reader :balance, :entry_station, :journeys, :single_journey
 
   LIMIT = 90
   MIN_BALANCE = 1
 
-  def initialize
+  def initialize(journey = Journey.new)
     @balance = 0
     @journeys = []
-    @single_journey = Journey.new
+    @single_journey = journey
   end
 
   def top_up(value)
@@ -19,13 +19,13 @@ class Oystercard
   end
 
   def touch_in(station)
-  #  fail "Can\'t touch in: card already in use" if @single_journey[:entry] != nil
+    fail "Can\'t touch in: card already in use" if @single_journey.entry_station != nil
     sufficient_funds?
     @single_journey.update_entry_station(station)
   end
 
   def touch_out(fare, station)
-#    fail "Can\'t touch out without touching in first" if  @single_journey[:entry] == nil
+    fail "Can\'t touch out without touching in first" if  @single_journey.entry_station == nil
     deduct(fare)
     @single_journey.update_exit_station(station)
     @journeys << @single_journey
@@ -47,7 +47,7 @@ class Oystercard
   end
 
   def reset_journey
-    @single_journey = Journey.new
+    journey = Journey.new
   end
 
 end

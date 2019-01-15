@@ -1,9 +1,11 @@
 require 'oystercard'
+require 'journey'
 
 describe Oystercard do
 
   let(:station) { double :station }
   let(:exit_station) { double :exit_station }
+  # let(:journey) { double :journey }
   # let(:topped_up_card) { Oystercard.new.top_up(10) }
 
   it "has a 0 balance when a new card is initialized" do
@@ -46,10 +48,12 @@ describe Oystercard do
   end
 
   it "will add single_journey to a 'journeys' array when touching out" do
-    subject.top_up(10)
-    subject.touch_in(station)
-    subject.touch_out(2, exit_station)
-    expect(subject.journeys[0]).to include(:entry => station, :exit => exit_station)
+    journey = Journey.new
+    card = Oystercard.new(journey)
+    card.top_up(10)
+    card.touch_in(station)
+    card.touch_out(2, exit_station)
+    expect(card.journeys).to include(journey)
   end
 
 end
