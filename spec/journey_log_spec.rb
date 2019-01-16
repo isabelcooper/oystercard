@@ -2,7 +2,7 @@ require 'journey_log'
 
 describe JourneyLog do
   let(:station) { double(:station) }
-  let(:single_journey) { double(:journey, update_entry_station: station, update_exit_station: station) }
+  let(:single_journey) { double(:journey, update_entry_station: station, update_exit_station: station, set_fare: 1, no_journey: false) }
   let(:journey_class) { double(:single_journey, new: single_journey) }
   let(:journey_class_new) { double(:single_journey, new: single_journey) }
   let(:journey_log) { JourneyLog.new(journey_class) }
@@ -21,6 +21,11 @@ describe JourneyLog do
     it 'should reset single_journey' do
       journey_log.start_journey(station)
       expect(journey_log.single_journey).to_not equal(single_journey)
+    end
+
+    it 'should receive the message set_fare' do
+      expect(single_journey).to receive(:set_fare)
+      journey_log.start_journey(station)
     end
   end
 
