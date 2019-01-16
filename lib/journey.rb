@@ -20,7 +20,8 @@ class Journey
   end
 
   def set_fare
-    @fare = fare_calculator unless no_journey
+  #  no_journey ? @fare = 0 : @fare = fare_calculator
+   (@fare = fare_calculator) unless no_journey
   end
 
   def no_journey

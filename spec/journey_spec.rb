@@ -33,6 +33,7 @@ describe Journey do
       subject.update_entry_station(station)
       subject.update_exit_station(station)
       subject.set_fare
+      puts subject.exit_station
       expect(subject.fare).to eq Journey::MINIMUM_FARE
     end
 
