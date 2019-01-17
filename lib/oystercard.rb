@@ -19,7 +19,7 @@ class Oystercard
   end
 
   def touch_in(station)
-    deduct(@journeylog.journeys.last.fare) unless @journeylog.journeys == []
+    log_previous_journey unless no_journey?
     sufficient_funds?
     @journeylog.start_journey(station)
   end
@@ -30,6 +30,16 @@ class Oystercard
 
   private
 
+  def log_previous_journey
+    @journeylog.fare_calculation
+    @journeylog.store
+    deduct(last_fare)
+  end
+
+  def last_fare
+    @journeylog.journeys.last.fare
+  end
+
   def deduct(fare)
     @balance -= fare
   end
@@ -39,7 +49,19 @@ class Oystercard
   end
 
   def sufficient_funds?
-    fail "Can\'t start journey: insufficient funds" if balance <= MIN_BALANCE
+    fail "Can't start journey: insufficient funds" if balance <= MIN_BALANCE
+  end
+
+  # def already_touched_out?
+  #   raise("Can't touch out without touching in first") if current_journey_start_station == nil
+  # end
+  #
+  # def already_touched_in?
+  #   raise("Can't touch in: card already in use") if current_journey_start_station != nil
+  # end
+
+  def no_journey?
+    @journeylog.current_journey.no_journey
   end
 
 end

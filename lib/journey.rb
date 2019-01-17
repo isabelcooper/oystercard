@@ -20,17 +20,13 @@ class Journey
   end
 
   def set_fare
-  #  no_journey ? @fare = 0 : @fare = fare_calculator
    @fare = fare_calculator unless no_journey
   end
 
   def no_journey
     entry_station == nil && exit_station == nil
   end
-
-  # def incomplete
-  #  ( entry_station == nil || exit_station == nil ) && ( entry_station != exit_station )
-  # end
+  
 
   private
 
