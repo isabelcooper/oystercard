@@ -8,15 +8,24 @@ describe JourneyLog do
   let(:journey_log) { JourneyLog.new(journey_class) }
 
   describe '#start_journey' do
-    # it 'should store the start of a new journey' do
-    #   expect(current_journey).to receive(:update_entry_station)
-    #   journey_log.start_station(station)
-    # end
 
-    it 'should store the start of a new journey' do
+    it 'should expect Journey class responds to update_entry_station' do
       expect(current_journey).to receive(:update_entry_station)
-      journey_log.start_journey(station,journey_class_new)
+      journey_log.start_journey(station)
     end
+
+  end
+
+  describe '#end_journey' do
+
+    it 'should store the end of a new journey' do
+      expect(current_journey).to receive(:update_exit_station)
+      journey_log.end_journey(station)
+    end
+
+  end
+
+  describe '#log_journey' do
 
     it 'should reset current_journey' do
       journey_log.log_journey
@@ -25,19 +34,13 @@ describe JourneyLog do
 
     it 'should receive the message set_fare' do
       expect(current_journey).to receive(:set_fare)
-      journey_log.fare_calculation
-    end
-  end
-
-  describe '#end_journey' do
-    it 'should store the end of a new journey' do
-      expect(current_journey).to receive(:update_exit_station)
-      journey_log.end_journey(station)
+      journey_log.log_journey
     end
 
     it 'should store a journey in journeys' do
-      journey_log.store
+      journey_log.log_journey
       expect(journey_log.journeys).to include(current_journey)
     end
+
   end
 end
