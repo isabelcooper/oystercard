@@ -2,7 +2,8 @@ require 'journey'
 
 describe Journey do
 
-  let(:station) { double(:station) }
+  let(:station) { double(:station, zone: 1) }
+  let(:station2) { double(:station, zone: 3) }
 
   describe '#entry_station' do
     it 'should return nil entry station when initialized without an argument' do
@@ -29,7 +30,7 @@ describe Journey do
 
   describe '#fare_calculation' do
 
-    it 'should calculate a minimum fare if the user touches in and out' do
+    it 'should calculate minimum fare if travelled in one zone' do
       subject.update_entry_station(station)
       subject.update_exit_station(station)
       subject.set_fare
@@ -50,6 +51,13 @@ describe Journey do
       subject.update_entry_station(station)
       subject.set_fare
       expect(subject.fare).to eq Journey::PENALTY_FARE
+    end
+
+    it 'should calculate the fare between two zones' do
+      subject.update_entry_station(station)
+      subject.update_exit_station(station2)
+      subject.set_fare
+      expect(subject.fare).to eq 3
     end
   end
 

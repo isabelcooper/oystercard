@@ -19,7 +19,7 @@ describe JourneyLog do
     end
 
     it 'should reset current_journey' do
-      journey_log.start_journey(station)
+      journey_log.log_journey
       expect(journey_log.current_journey).to_not equal(current_journey)
     end
 

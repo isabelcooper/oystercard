@@ -10,7 +10,6 @@ class JourneyLog
   end
 
   def start_journey(station, journey = Journey)
-    reset(journey)
     start_station(station)
   end
 
@@ -24,6 +23,12 @@ class JourneyLog
 
   def store
     @journeys << current_journey
+  end
+
+  def log_journey(journey = Journey)
+    fare_calculation
+    store
+    reset(journey)
   end
 
   private

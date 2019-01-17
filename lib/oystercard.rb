@@ -1,5 +1,6 @@
 require_relative 'journey'
 require_relative 'journey_log'
+require_relative 'station'
 
 class Oystercard
 
@@ -19,20 +20,20 @@ class Oystercard
   end
 
   def touch_in(station)
-    log_previous_journey unless no_journey?
+    log_previous_journey unless journeylog.current_journey.no_journey
     sufficient_funds?
     @journeylog.start_journey(station)
   end
 
   def touch_out(station)
     @journeylog.end_journey(station)
+    log_previous_journey
   end
 
   private
 
   def log_previous_journey
-    @journeylog.fare_calculation
-    @journeylog.store
+    @journeylog.log_journey
     deduct(last_fare)
   end
 
@@ -52,6 +53,10 @@ class Oystercard
     fail "Can't start journey: insufficient funds" if balance <= MIN_BALANCE
   end
 
+  def no_journey?
+    @journeylog.current_journey.no_journey
+  end
+
   # def already_touched_out?
   #   raise("Can't touch out without touching in first") if current_journey_start_station == nil
   # end
@@ -59,9 +64,5 @@ class Oystercard
   # def already_touched_in?
   #   raise("Can't touch in: card already in use") if current_journey_start_station != nil
   # end
-
-  def no_journey?
-    @journeylog.current_journey.no_journey
-  end
 
 end

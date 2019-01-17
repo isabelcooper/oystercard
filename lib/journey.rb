@@ -26,7 +26,7 @@ class Journey
   def no_journey
     entry_station == nil && exit_station == nil
   end
-  
+
 
   private
 
@@ -35,7 +35,11 @@ class Journey
   end
 
   def fare_calculator
-    complete ? MINIMUM_FARE : PENALTY_FARE
+    complete ? (MINIMUM_FARE + zone_counter) : PENALTY_FARE
+  end
+
+  def zone_counter
+    (@entry_station.zone - @exit_station.zone).abs
   end
 
 end

@@ -3,7 +3,7 @@ require 'journey'
 
 describe Oystercard do
 
-  let(:station) { double :station }
+  let(:station) { double :station, zone: 1 }
   let(:exit_station) { double :exit_station }
 
   describe '#balance' do
@@ -21,7 +21,6 @@ describe Oystercard do
       subject.top_up(10)
       subject.touch_in(station)
       subject.touch_out(station)
-      subject.touch_in(station)
       expect(subject.balance).to eq 9
     end
 
