@@ -36,7 +36,7 @@ describe Oystercard do
   #   expect{ subject.touch_in(station) }.to raise_error "Can\'t touch in: card already in use"
   # end
 
-  it "should deduct a fare from the card balance when the touch_out method is called" do
+  it "should deduct the previous journey fare from the card balance when the touch_in method is called" do
     subject.top_up(10)
     subject.touch_in(station)
     subject.touch_out(station)

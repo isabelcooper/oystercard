@@ -21,7 +21,7 @@ class Journey
 
   def set_fare
   #  no_journey ? @fare = 0 : @fare = fare_calculator
-   (@fare = fare_calculator) unless no_journey
+   @fare = fare_calculator unless no_journey
   end
 
   def no_journey

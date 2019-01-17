@@ -17,6 +17,7 @@ class JourneyLog
 
   def end_journey(station)
     exit_station(station)
+    fare_calculation
     store
   end
 
